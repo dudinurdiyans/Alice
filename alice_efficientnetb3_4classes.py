@@ -15,7 +15,6 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 from PIL import Image
 import matplotlib.pyplot as plt
-import cv2
 import pandas as pd
 
 import gdown
