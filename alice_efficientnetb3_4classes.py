@@ -74,7 +74,7 @@ uploaded_file = st.file_uploader("Unggah gambar (jpg/jpeg/png)", type=["jpg", "j
 
 if uploaded_file is not None:
     img = Image.open(uploaded_file).convert("RGB")
-    st.image(img, caption="Gambar X-ray yang diunggah", use_column_width=True)
+    st.image(img, caption="Gambar X-ray yang diunggah", use_container_width=True)
 
     if st.button("🔍 Prediksi"):
         label, confidence, _ = predict(img)
