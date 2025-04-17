@@ -1,9 +1,10 @@
 streamlit>=1.30
-numpy>=1.21
+numpy
 tensorflow>=2.9
-Pillow>=8.0
-matplotlib>=3.4
-opencv-python>=4.5
-pandas>=1.3
-gdown>=4.6
+Pillow
+matplotlib
+opencv-python
+pandas
+gdown
+
 
