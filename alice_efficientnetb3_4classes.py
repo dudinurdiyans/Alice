@@ -15,8 +15,8 @@ import zipfile
 st.set_page_config(page_title="Klasifikasi X-ray Paru-paru", layout="centered")
 
 # === Judul Aplikasi ===
-st.title("🩻 Klasifikasi Penyakit Paru-paru dari Citra X-Ray")
-st.write("Upload citra X-ray chest dan dapatkan prediksi penyakit paru-paru.")
+st.title("🩻 ALICE: Automated Lung Image Classification and Evaluation ")
+st.write("Klasifikasi Penyakit Paru-paru dari Citra X-Ray")
 
 # === Unduh Model dari Google Drive ===
 MODEL_PATH = "EffNetB3_CLAHE3.keras"
