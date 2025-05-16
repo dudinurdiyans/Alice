@@ -79,7 +79,6 @@ if uploaded_file is not None:
     if st.button("🔍 Prediksi"):
         label, confidence, _ = predict(img)
         st.success(f"**Hasil Prediksi: {label} ({confidence:.2f}%)**")
-
         log_prediction(uploaded_file.name, label, confidence)
 
         # Tampilkan histori
@@ -92,11 +91,46 @@ if uploaded_file is not None:
 st.subheader("📂 Batch Prediksi (ZIP)")
 batch_file = st.file_uploader("Unggah file ZIP yang berisi gambar X-ray", type=["zip"])
 
+# Fungsi bantu untuk ambil label asli dari nama file
+def extract_true_label_from_filename(filename):
+    for label in CLASS_NAMES:
+        if label.lower().replace(" ", "") in filename.lower().replace(" ", ""):
+            return label
+    return None  # Tidak bisa dikenali
+
 if batch_file is not None:
+    correct = 0
+    total = 0
+    results = []
+
     with zipfile.ZipFile(BytesIO(batch_file.read())) as archive:
         image_files = [f for f in archive.namelist() if f.endswith(('jpg', 'jpeg', 'png'))]
         for image_file in image_files:
             with archive.open(image_file) as img_file:
                 img = Image.open(img_file).convert("RGB")
-                label, confidence, _ = predict(img)
-                st.write(f"{image_file}: {label} ({confidence:.2f}%)")
+                predicted_label, confidence, _ = predict(img)
+                true_label = extract_true_label_from_filename(image_file)
+
+                is_correct = predicted_label == true_label if true_label else None
+                if is_correct is not None:
+                    if is_correct:
+                        correct += 1
+                    total += 1
+
+                results.append({
+                    "Filename": image_file,
+                    "Predicted": predicted_label,
+                    "Confidence": f"{confidence:.2f}%",
+                    "True Label": true_label if true_label else "Unknown",
+                    "Match": is_correct if is_correct is not None else "N/A"
+                })
+
+    result_df = pd.DataFrame(results)
+    st.dataframe(result_df)
+
+    if total > 0:
+        accuracy = (correct / total) * 100
+        st.success(f"✅ Akurasi Batch: {accuracy:.2f}% ({correct}/{total} benar)")
+    else:
+        st.warning("⚠️ Tidak ada label ground truth yang bisa dikenali dari nama file.")
+
